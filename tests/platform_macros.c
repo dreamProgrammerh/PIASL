@@ -8,13 +8,13 @@
 #include <piasl/platform.h>
 #include <piasl/ptypes.h>
 
-#define P_BOOL(m)   printf("  \x1b[30m%-30s %s\x1b[0m\n", #m, (m) ? "\x1b[32mtrue" : "\x1b[31mfalse")
-#define P_INT(m)    printf("  \x1b[30m%-30s \x1b[33m%+lld\x1b[0m\n", #m, (long long)(m))
-#define P_UINT(m)   printf("  \x1b[30m%-30s \x1b[33m%llu\x1b[0m\n", #m, (unsigned long long)(m))
-#define P_FLOAT(m)  printf("  \x1b[30m%-30s \x1b[33m%g\x1b[0m\n", #m, (double)(m))
-#define P_CHAR(m)   printf("  \x1b[30m%-30s \x1b[34m'%c' \x1b[33m(%d)\x1b[0m\n", #m, (m), (int)(m))
-#define P_STR(m)    printf("  \x1b[30m%-30s \x1b[34m\"%s\"\x1b[0m\n", #m, (m))
-#define P_IDENT(m)  printf("  \x1b[30m%-30s \x1b[36m%s\x1b[0m\n", #m, M_toString(m))
+#define P_BOOL(m)   printf("  \x1b[37m%-30s %s\x1b[0m\n", #m, (m) ? "\x1b[32mtrue" : "\x1b[31mfalse")
+#define P_INT(m)    printf("  \x1b[37m%-30s \x1b[33m%+lld\x1b[0m\n", #m, (long long)(m))
+#define P_UINT(m)   printf("  \x1b[37m%-30s \x1b[33m%llu\x1b[0m\n", #m, (unsigned long long)(m))
+#define P_FLOAT(m)  printf("  \x1b[37m%-30s \x1b[33m%g\x1b[0m\n", #m, (double)(m))
+#define P_CHAR(m)   printf("  \x1b[37m%-30s \x1b[34m'%c' \x1b[33m(%d)\x1b[0m\n", #m, (m), (int)(m))
+#define P_STR(m)    printf("  \x1b[37m%-30s \x1b[34m\"%s\"\x1b[0m\n", #m, (m))
+#define P_IDENT(m)  printf("  \x1b[37m%-30s \x1b[36m%s\x1b[0m\n", #m, M_toString(m))
 #define P_SECT(m)   printf("  \n\x1b[35m== %s* ==\x1b[0m\n", #m);
 
 int main(void) {
@@ -120,14 +120,14 @@ int main(void) {
     P_BOOL(COMPILER_isWatcom);
     P_BOOL(COMPILER_isBorland);
     P_BOOL(COMPILER_isGHS);
-    P_BOOL(COMPILER_versionMajor);
-    P_BOOL(COMPILER_versionMinor);
-    P_BOOL(COMPILER_versionPatch);
     P_BOOL(COMPILER_isIntel);
     P_BOOL(COMPILER_isGNUCCompatible);
     P_BOOL(COMPILER_isGNUC);
     P_BOOL(COMPILER_hasDeclspec);
     P_UINT(COMPILER_versionInteger);
+    P_UINT(COMPILER_versionMajor);
+    P_UINT(COMPILER_versionMinor);
+    P_UINT(COMPILER_versionPatch);
 
     P_SECT(LANG_);
     P_BOOL(LANG_isC);
