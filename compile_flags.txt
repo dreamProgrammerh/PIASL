@@ -1,0 +1,9 @@
+-xc
+-std=c99
+-ffreestanding
+-Iinclude
+-Wall
+-Wextra
+-Wpedantic
+-Wno-unused-function
+-Wno-unused-include
