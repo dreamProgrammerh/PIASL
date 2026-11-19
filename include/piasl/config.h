@@ -1,8 +1,14 @@
 #ifndef PIASL_CONFIG_H
 #define PIASL_CONFIG_H 1
-#include "cp/platform.h"
-#include "cp/nonative.h"
-#include "cp/ptypes.h"
+
+#include "platform.h"
+#include "nonative.h"
+#include "ptypes.h"
+
+// silence warnings
+#if !(PIASL_PLATFORM_H || PIASL_NONATIVE_H || PIASL_PTYPES_H)
+#   error "piasl require platform.h, nonative.h, and ptypes.h to be included."
+#endif
 
 #if ARCH_isX86_32
 #   define PIASL_FC ATTR_stdcall
