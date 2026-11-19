@@ -1,5 +1,6 @@
 -xc
 -std=c99
+--target=x86_64-w64-mingw32
 -ffreestanding
 -Iinclude
 -include
@@ -9,3 +10,4 @@ config.h
 -Wpedantic
 -Wno-unused-function
 -Wno-unused-include
+-Wno-empty-translation-unit
