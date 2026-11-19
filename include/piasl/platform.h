@@ -181,6 +181,7 @@
 
 // == OS Path --
 #if OS_isWindows
+#   define OS_olf CRLF
 #   define OS_newline       "\r\n"
 #   define OS_newlineLen    2
 #   define OS_pathSep       '\\'
@@ -189,10 +190,13 @@
 #   define OS_pathAltSepStr "/"
 #   define OS_isPathSep(ch) ((ch) == '\\' || (ch) == '/')
 #else
+#   define OS_olf LF
 #   define OS_newline       "\n"
 #   define OS_newlineLen    1
 #   define OS_pathSep       '/'
+#   define OS_pathAltSep    '/'
 #   define OS_pathSepStr    "/"
+#   define OS_pathAltSepStr "/"
 #   define OS_isPathSep(ch) ((ch) == '/')
 #endif
 
