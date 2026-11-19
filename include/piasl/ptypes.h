@@ -1,54 +1,60 @@
 #ifndef PIASL_PTYPES_H
 #define PIASL_PTYPES_H 1
 
-typedef unsigned char p_u8;
-typedef unsigned short p_u16;
-typedef unsigned int p_u32;
-typedef unsigned long long p_u64;
-typedef unsigned long p_uL;
+/*
+ * ptypes.h - prefixed types
+ * - *<Width> for fixed width types (e.g. i8, u16, c32)
+ * - *<UpperCase> for platform specific width types (e.g. uL, uS, iP)
+ */
 
-typedef signed char p_i8;
-typedef signed short p_i16;
-typedef signed int p_i32;
-typedef signed long long p_i64;
-typedef signed long p_iL;
+typedef unsigned char           p_u8;
+typedef unsigned short          p_u16;
+typedef unsigned int            p_u32;
+typedef unsigned long long      p_u64;
+typedef unsigned long           p_uL;
 
-typedef char p_c8;
-typedef unsigned short p_c16;
-typedef unsigned int p_c32;
+typedef signed char             p_i8;
+typedef signed short            p_i16;
+typedef signed int              p_i32;
+typedef signed long long        p_i64;
+typedef signed long             p_iL;
 
-typedef signed char p_b8;
-typedef signed short p_b16;
-typedef signed int p_b32;
+typedef char                    p_c8;
+typedef unsigned short          p_c16;
+typedef unsigned int            p_c32;
 
-typedef float p_f32;
-typedef double p_f64;
-typedef long double p_f128;
+typedef signed char             p_b8;
+typedef signed short            p_b16;
+typedef signed int              p_b32;
 
-typedef void p_vd;
-typedef void* p_ptr;
-typedef const void* const p_ref;
-typedef p_c8* p_buf;
-typedef const p_c8* const p_viw;
-typedef p_ptr p_handle;
+typedef float                   p_f32;
+typedef double                  p_f64;
+typedef long double             p_f128;
+
+typedef void                    p_vd;
+typedef void*                   p_ptr;
+typedef const void* const       p_ref;
+typedef p_c8*                   p_buf;
+typedef const p_c8* const       p_viw;
+typedef p_ptr                   p_handle;
 
 #define reinterpret(from, to, val) ((union{from a;to b;}){.a=(from)(val)}.b)
 
 #if ARCH_is64Bit
-    typedef p_u64 p_uS;
-    typedef p_i64 p_iS;
-    typedef p_u64 p_uP;
-    typedef p_i64 p_iP;
+    typedef p_u64               p_uS;
+    typedef p_i64               p_iS;
+    typedef p_u64               p_uP;
+    typedef p_i64               p_iP;
 #   define P_US_MIN 0
 #   define P_US_MAX P_U64_MAX
 #   define P_IS_MIN P_I64_MIN
 #   define P_IS_MAX P_I64_MAX
 #   define P_PTR_SIZE 8
 #elif ARCH_is32Bit
-    typedef p_u32 p_uS;
-    typedef p_i32 p_iS;
-    typedef p_u32 p_uP;
-    typedef p_i32 p_iP;
+    typedef p_u32               p_uS;
+    typedef p_i32               p_iS;
+    typedef p_u32               p_uP;
+    typedef p_i32               p_iP;
 #   define P_US_MIN 0
 #   define P_US_MAX P_U32_MAX
 #   define P_IS_MIN P_I32_MIN
