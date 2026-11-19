@@ -2,6 +2,8 @@
 -std=c99
 -ffreestanding
 -Iinclude
+-include
+config.h
 -Wall
 -Wextra
 -Wpedantic
