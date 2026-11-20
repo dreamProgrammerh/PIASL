@@ -203,18 +203,18 @@
 // == Endianness --
 #if defined(__BYTE_ORDER__)
 #   if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
-#       define OS_isLittleEndian 1
-#       define OS_isBigEndian    0
+#       define ENDIAN_isLittle 1
+#       define ENDIAN_isBig    0
 #   elif __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
-#       define OS_isLittleEndian 0
-#       define OS_isBigEndian    1
+#       define ENDIAN_isLittle 0
+#       define ENDIAN_isBig    1
 #   else
 #       error "Unknown byte order"
 #   endif
 #elif defined(_MSC_VER) || defined(__MINGW32__) || defined(__MINGW64__)
     // MSVC / MinGW on x86/x64/ARM64 Windows - all little-endian
-#   define OS_isLittleEndian 1
-#   define OS_isBigEndian    0
+#   define ENDIAN_isLittle 1
+#   define ENDIAN_isBig    0
 #else
 #   error "Cannot determine endianness"
 #endif
@@ -1281,7 +1281,7 @@
 #endif
 
 // --== Endian conversion ----
-#if OS_isBigEndian
+#if ENDIAN_isBig
 #   define M_hton16(x) (x)
 #   define M_hton32(x) (x)
 #   define M_ntoh16(x) (x)

@@ -1,7 +1,7 @@
 /* tests/platform_macros.c
  *
  * Prints the value of every constant macro defined by platform.h, and ptypes.h
- * (OS_*, ARCH_*, COMPILER_*, LANG_*, STD_*, P_*). Function-like macros and pure text.
+ * (OS_*, ENDIAN_*, ARCH_*, COMPILER_*, LANG_*, STD_*, P_*). Function-like macros and pure text.
  */
 
 #include <stdio.h>
@@ -44,8 +44,6 @@ int main(void) {
     P_BOOL(OS_isAIX);
     P_BOOL(OS_isIRIX);
     P_BOOL(OS_isOS2);
-    P_BOOL(OS_isLittleEndian);
-    P_BOOL(OS_isBigEndian);
     P_IDENT(OS_olf);
     P_UINT(OS_newlineLen);
     P_CHAR(OS_pathSep);
@@ -53,6 +51,10 @@ int main(void) {
     P_STR(OS_newline);
     P_STR(OS_pathSepStr);
     P_STR(OS_pathAltSepStr);
+
+    P_SECT(ENDIAN_);
+    P_BOOL(ENDIAN_isLittle);
+    P_BOOL(ENDIAN_isBig);
 
     P_SECT(ARCH_);
     P_BOOL(ARCH_isX86_64);
