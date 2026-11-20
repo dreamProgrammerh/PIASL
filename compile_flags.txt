@@ -1,5 +1,5 @@
 -xc
--std=c99
+-std=c11
 --target=x86_64-w64-mingw32
 -ffreestanding
 -Iinclude
