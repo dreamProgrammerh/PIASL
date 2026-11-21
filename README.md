@@ -3,7 +3,7 @@
 > Zero-libc, header-only, self-contained OS interface for custom runtimes.
 
 PIASL provides the lowest-level system interface for building a C runtime 
-and standard library from scratch - no `libc`, no `<windows.h>`, no `<stdio.h>`.
+and standard library from scratch - no `libc`, no `<windows.h>`, no `<unistd.h>`.
 Every type is `p_` prefixed (`p_u64`/`p_iS`),
 every syscall number is `PIASL_*CN_*`,
 every dispatch is inline assembly at the call site.
@@ -62,19 +62,19 @@ Build:
 
 ```sh
 # direct syscall targets (Linux) - header-only, no loader unit
-clang -o a.out -std=c11 --target=x86_64-linux64 -Iinclude \
+clang -o a.out -std=c11 --target=x86_64-linux-gnu -Iinclude \
     -nostdlib -nostartfiles -Wl,--entry=_start \
-    tests/cos/hello.c
+    hello.c
 
 # gateway targets (Windows) - link the loader unit
 clang -o a.exe -std=c11 --target=x86_64-w64-mingw32 -Iinclude \
     -nostdlib -nostartfiles -Wl,--entry=_start -Wl,--subsystem=console \
-    tests/cos/hello.c piasl/sys/gateloader.c
+    hello.c piasl/sys/gateloader.c
 ```
 
-The cos matrix (all `os`x`arch` pairs compile `tests/cos/hello.c`)
-runs runtime hello checks run on Linux, Android, the three BSD VMs,
-macOS, IOS, OpenBSD, Illumos and Windows CI jobs.
+The cos matrix (all `os`x`arch` pairs compile) should run a 
+runtime checks on Linux, Android, the three BSD VMs, macOS,
+IOS, OpenBSD, Illumos and Windows CI jobs.
 
 ## Symbol Tables
 
@@ -108,7 +108,7 @@ After line 5 the file is pure data: no comments.
 ---
 
 one line per implemented syscall / OS API (the union across arches)
-with its full signature: `getpid > getpid = (): isize`,
+with its full signature: `getpid > getpid = (): iS`,
 `ReadFile > read_file = (hFile: handle, lpBuffer: ptr, ...): i32`
 
 
@@ -169,6 +169,7 @@ Gateway targets keep type normalization mappings (`DWORD > i32`).
 
 
 ### symbols/types.txt:
+---
 
 shared base type aliases (`u8 = unsigned char`); the four 
 width-dependent aliases (`uS`, `iS`, `uP`, `iP`) share one
