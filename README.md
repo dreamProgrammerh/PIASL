@@ -219,4 +219,7 @@ Soon
 
 ## Makefile
 
+> Requires: `clang`, `python3`, and `sh`.
+
 - `platform-%`: runs platform_macros.c test file.
+- `T-%`: convert piasl target to llvm target triple.
