@@ -134,7 +134,7 @@
 #endif
 
 // === Unix Fallback ===
-// for any other Unix-like systems 
+// for any other Unix-like systems
 #if (defined(__unix__) || defined(__unix) || defined(unix)) \
         && (!defined(OS_isUnix) || !OS_isUnix)
 #   define OS_isUnix 1
@@ -890,7 +890,7 @@
 /* Function & Variable Attributes (ATTR_)                             */
 /* ================================================================== */
 
-// --== Detection helpers for each attribute ----
+// === Detection helpers for each attribute ===
 
 // always_inline
 #if __has_attribute(always_inline)
@@ -1103,33 +1103,39 @@
 #   define ATTR_optnone
 #endif
 
-// --== Calling conventions (Windows) ----
+// === Calling conventions (Windows) ===
 
 // cdecl
-#if COMPILER_isMSVC
-#   define ATTR_cdecl __cdecl
+#if !ARCH_isX86_32
+#   define CALL_c
+#elif COMPILER_isMSVC
+#   define CALL_c __cdecl
 #elif __has_attribute(cdecl)
-#   define ATTR_cdecl __attribute__((__cdecl__))
+#   define CALL_c __attribute__((__cdecl__))
 #else
-#   define ATTR_cdecl
+#   define CALL_c
 #endif
 
 // stdcall
-#if COMPILER_isMSVC
-#   define ATTR_stdcall __stdcall
+#if !ARCH_isX86_32
+#   define CALL_std
+#elif COMPILER_isMSVC
+#   define CALL_std __stdcall
 #elif __has_attribute(stdcall)
-#   define ATTR_stdcall __attribute__((__stdcall__))
+#   define CALL_std __attribute__((__stdcall__))
 #else
-#   define ATTR_stdcall
+#   define CALL_std
 #endif
 
 // fastcall
-#if COMPILER_isMSVC
-#   define ATTR_fastcall __fastcall
+#if !ARCH_isX86_32
+#   define CALL_fast
+#elif COMPILER_isMSVC
+#   define CALL_fast __fastcall
 #elif __has_attribute(fastcall)
-#   define ATTR_fastcall __attribute__((__fastcall__))
+#   define CALL_fast __attribute__((__fastcall__))
 #else
-#   define ATTR_fastcall
+#   define CALL_fast
 #endif
 
 // naked
@@ -1145,7 +1151,7 @@
 /* Compiler Built-ins (B_)                                            */
 /* ================================================================== */
 
-// --== Branch prediction ----
+// === Branch prediction ===
 #if COMPILER_isGNUCCompatible && __has_builtin(__builtin_expect)
 #   define B_likely(x)   __builtin_expect(!!(x), 1)
 #   define B_unlikely(x) __builtin_expect(!!(x), 0)
@@ -1154,7 +1160,7 @@
 #   define B_unlikely(x) (x)
 #endif
 
-// --== Unreachable ----
+// === Unreachable ===
 #if COMPILER_isGNUCCompatible && __has_builtin(__builtin_unreachable)
 #   define B_unreachable() __builtin_unreachable()
 #elif COMPILER_isMSVC
@@ -1163,7 +1169,7 @@
 #   define B_unreachable() do { } while (1)
 #endif
 
-// --== Assumption ----
+// === Assumption ===
 #if COMPILER_isClang && __has_builtin(__builtin_assume)
 #   define B_assume(expr) __builtin_assume(expr)
 #elif COMPILER_isMSVC
@@ -1172,7 +1178,7 @@
 #   define B_assume(expr) do { if (!(expr)) B_unreachable(); } while (0)
 #endif
 
-// --== Compiler barrier ----
+// === Compiler barrier ===
 #if COMPILER_isGNUCCompatible
 #   define B_compilerBarrier() __asm__ volatile("" ::: "memory")
 #elif COMPILER_isMSVC
@@ -1181,35 +1187,35 @@
 #   define B_compilerBarrier() do { } while (0)
 #endif
 
-// --== Memory prefetch ----
+// === Memory prefetch ===
 #if COMPILER_isGNUCCompatible && __has_builtin(__builtin_prefetch)
 #   define B_prefetch(addr, rw, locality) __builtin_prefetch(addr, rw, locality)
 #else
 #   define B_prefetch(addr, rw, locality) ((void)0)
 #endif
 
-// --== Compile-time constant check ----
+// === Compile-time constant check ===
 #if COMPILER_isGNUCCompatible && __has_builtin(__builtin_constant_p)
 #   define B_constant_p(expr) __builtin_constant_p(expr)
 #else
 #   define B_constant_p(expr) 0
 #endif
 
-// --== Type compatibility (GCC only) ----
+// === Type compatibility (GCC only) ===
 #if COMPILER_isGCC && __has_builtin(__builtin_types_compatible_p)
 #   define B_typesCompatible_p(t1, t2) __builtin_types_compatible_p(t1, t2)
 #else
 #   define B_typesCompatible_p(t1, t2) 0
 #endif
 
-// --== Compile-time choice (GCC only) ----
+// === Compile-time choice (GCC only) ===
 #if COMPILER_isGCC && __has_builtin(__builtin_choose_expr)
 #   define B_chooseExpr(c, e1, e2) __builtin_choose_expr(c, e1, e2)
 #else
 #   define B_chooseExpr(c, e1, e2) ((c) ? (e1) : (e2))
 #endif
 
-// --== Trap ----
+// === Trap ===
 #if COMPILER_isGNUCCompatible && __has_builtin(__builtin_trap)
 #   define B_trap() __builtin_trap()
 #elif COMPILER_isMSVC
@@ -1218,7 +1224,7 @@
 #   define B_trap() do { } while (1)
 #endif
 
-// --== Offsetof (built-in) ----
+// === Offsetof (built-in) ===
 #if COMPILER_isGNUCCompatible && __has_builtin(__builtin_offsetof)
 #   define B_offsetof(type, member) __builtin_offsetof(type, member)
 #else
@@ -1229,29 +1235,29 @@
 /* General Utility Macros (M_)                                        */
 /* ================================================================== */
 
-// --== Alignment ----
+// === Alignment ===
 #define M_alignUp(value, alignment)   (((value) + ((alignment) - 1)) & ~((alignment) - 1))
 #define M_alignDown(value, alignment) ((value) & ~((alignment) - 1))
 #define M_isAligned(value, alignment) (((value) & ((alignment) - 1)) == 0)
 
-// --== Array size ----
+// === Array size ===
 #define M_arraySize(arr) (sizeof(arr) / sizeof((arr)[0]))
 
-// --== Offsetof (fallback) ----
+// === Offsetof (fallback) ===
 #if !defined(M_offsetOf)
 #   define M_offsetOf(type, member) B_offsetof(type, member)
 #endif
 
-// --== Container_of ----
+// === Container_of ===
 #define M_containerOf(ptr, type, member) \
     ((type*)((char*)(ptr) - M_offsetOf(type, member)))
 
-// --== Comparison ----
+// === Comparison ===
 #define M_cmp(a, b) \
     ((a) > (b) ?  1 : \
      (a) < (b) ? -1 : 0)
 
-// --== Byte swap (using built-ins if available) ----
+// === Byte swap (using built-ins if available) ===
 #if COMPILER_isGNUCCompatible && __has_builtin(__builtin_bswap16)
 #   define M_swap16(x) __builtin_bswap16(x)
 #elif defined(_MSC_VER)
@@ -1280,7 +1286,7 @@
 #   define M_swap64(x) /* fallback implementation if needed */
 #endif
 
-// --== Endian conversion ----
+// === Endian conversion ===
 #if ENDIAN_isBig
 #   define M_hton16(x) (x)
 #   define M_hton32(x) (x)
@@ -1293,14 +1299,14 @@
 #   define M_ntoh32(x) M_swap32(x)
 #endif
 
-// --== Preprocessor utilities ----
+// === Preprocessor utilities ===
 #define M_resolveMacro(sym) sym
 #define M_toString(v) #v
 #define M_toStringMacro(v) M_toString(v)
 #define M_concatWord(a, b) a ## b
 #define M_concatMacro(a, b) M_concatWord(a, b)
 
-// --== Function name macros ----
+// === Function name macros ===
 #if COMPILER_isGNUCCompatible
 #   define M_functionName __PRETTY_FUNCTION__
 #elif COMPILER_isMSVC
